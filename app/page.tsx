@@ -5,6 +5,7 @@ import Draggable from 'react-draggable';
 import { Category, MainGroup } from './types/map';
 import { DUDU_DATA } from './data/marks';
 
+
 const GameMap = dynamic(() => import('./components/GameMap'), { ssr: false });
 
 const FILTER_MENU: Record<MainGroup, { id: Category; label: string }[]> = {
@@ -76,64 +77,64 @@ export default function Home() {
 
   return (
     <main style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      <Draggable nodeRef={nodeRef} bounds="parent">
+      <Draggable 
+        nodeRef={nodeRef} 
+        bounds="parent"
+        handle=".drag-handle" // 헤더 부분을 잡아야만 움직이게 설정 (터치 간섭 방지)
+        enableUserSelectHack={false} // 모바일에서 텍스트 선택 방지 해제
+      >
         <div ref={nodeRef} style={{
-          position: 'absolute', top: '20px', left: '70px', zIndex: 1000,
-          background: 'rgba(255, 255, 255, 0.95)', padding: '15px', borderRadius: '12px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.2)', color: '#000', 
-          width: isMinimized ? 'auto' : '220px', // 접혔을 때 너비 조절
-          maxHeight: '85vh', overflowY: 'auto', cursor: 'move',
-          transition: 'width 0.3s ease' // 부드러운 애니메이션
+          position: 'absolute', top: '20px', left: '10px', zIndex: 9999, // zIndex를 최상단으로
+          background: 'rgba(255, 255, 255, 0.98)', padding: '12px', borderRadius: '12px',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.3)', color: '#000', 
+          width: isMinimized ? '140px' : '220px',
+          maxHeight: '80vh', overflowY: 'auto',
+          transition: 'width 0.3s ease',
+          touchAction: 'none' // 브라우저 기본 터치 동작 방지 (드래그용)
         }}>
-          {/* 헤더 영역: 제목과 접기 버튼 */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isMinimized ? '0' : '15px' }}>
-            {!isMinimized && <h3 style={{ margin: 0, fontSize: '18px' }}>🔍 지도 필터</h3>}
+          {/* 드래그 핸들 (모바일에서는 여기를 잡고 끌어야 함) */}
+          <div className="drag-handle" style={{ 
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+            marginBottom: isMinimized ? '0' : '15px', cursor: 'move',
+            background: '#f0f0f0', padding: '8px', borderRadius: '8px'
+          }}>
+            {!isMinimized && <h3 style={{ margin: 0, fontSize: '16px' }}>🔍 필터</h3>}
             <button 
-              onClick={() => setIsMinimized(!isMinimized)}
+              onClick={(e) => {
+                e.stopPropagation(); // 드래그 이벤트 전파 방지
+                setIsMinimized(!isMinimized);
+              }}
               style={{
-                padding: '5px 10px', cursor: 'pointer', background: '#eee', 
-                border: 'none', borderRadius: '6px', fontSize: '12px',
-                marginLeft: isMinimized ? '0' : '10px'
+                padding: '8px 12px', cursor: 'pointer', background: '#333', color: '#fff',
+                border: 'none', borderRadius: '6px', fontSize: '12px'
               }}
             >
-              {isMinimized ? '🔍 필터 열기' : '접기'}
+              {isMinimized ? '펼치기' : '접기'}
             </button>
           </div>
           
-          {/* 접히지 않았을 때만 상세 내용 표시 */}
           {!isMinimized && (
-            <>
-              {/* 상단 전체 조절 버튼 */}
+            <div style={{ touchAction: 'auto' }}> {/* 내부 체크박스는 터치 가능하게 */}
               <div style={{ display: 'flex', gap: '5px', marginBottom: '15px' }}>
-                <button 
-                  onClick={() => setAllFilters(true)}
-                  style={{ flex: 1, fontSize: '11px', padding: '5px', cursor: 'pointer', background: '#e3f2fd', border: '1px solid #90caf9', borderRadius: '4px' }}
-                >전체 선택</button>
-                <button 
-                  onClick={() => setAllFilters(false)}
-                  style={{ flex: 1, fontSize: '11px', padding: '5px', cursor: 'pointer', background: '#ffebee', border: '1px solid #ef9a9a', borderRadius: '4px' }}
-                >전체 해제</button>
+                <button onClick={() => setAllFilters(true)} style={btnStyle}>전체 선택</button>
+                <button onClick={() => setAllFilters(false)} style={btnStyle}>전체 해제</button>
               </div>
 
               {(Object.keys(FILTER_MENU) as MainGroup[]).map(group => (
                 <div key={group} style={{ marginBottom: '15px' }}>
-                  <div style={{ 
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-                    background: '#f5f5f5', padding: '4px 8px', borderRadius: '4px', marginBottom: '8px'
-                  }}>
-                    <h4 style={{ fontSize: '14px', margin: 0, color: '#333' }}>{group}</h4>
-                    <button 
-                      onClick={() => toggleGroup(group)}
-                      style={{ fontSize: '10px', padding: '2px 6px', cursor: 'pointer', background: '#fff', border: '1px solid #ccc', borderRadius: '3px' }}
-                    >On/Off</button>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <h4 style={{ fontSize: '14px', margin: 0 }}>{group}</h4>
+                    <button onClick={() => toggleGroup(group)} style={miniBtnStyle}>On/Off</button>
                   </div>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '8px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {FILTER_MENU[group].map(item => (
-                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '14px' }}>
+                      <label key={item.id} style={{ 
+                        display: 'flex', alignItems: 'center', cursor: 'pointer', 
+                        fontSize: '15px', padding: '5px 0' // 모바일 클릭 영역 확보
+                      }}>
                         <input 
                           type="checkbox" 
-                          style={{ marginRight: '8px' }}
+                          style={{ width: '20px', height: '20px', marginRight: '10px' }} // 체크박스 키우기
                           checked={activeFilters.includes(item.id)}
                           onChange={() => toggleFilter(item.id)}
                         />
@@ -143,7 +144,7 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-            </>
+            </div>
           )}
         </div>
       </Draggable>
@@ -152,3 +153,7 @@ export default function Home() {
     </main>
   );
 }
+
+// 스타일 변수 분리
+const btnStyle = { flex: 1, fontSize: '12px', padding: '10px 5px', cursor: 'pointer', background: '#e3f2fd', border: '1px solid #90caf9', borderRadius: '6px' };
+const miniBtnStyle = { fontSize: '11px', padding: '4px 8px', cursor: 'pointer', background: '#fff', border: '1px solid #ccc', borderRadius: '4px' };
