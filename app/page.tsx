@@ -106,7 +106,7 @@ export default function Home() {
               }}
               style={{
                 padding: '8px 12px', cursor: 'pointer', background: '#333', color: '#fff',
-                border: 'none', borderRadius: '6px', fontSize: '12px'
+                border: 'none', borderRadius: '6px', fontSize: '14px',zIndex: 10001,
               }}
             >
               {isMinimized ? '펼치기' : '접기'}
