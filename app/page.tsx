@@ -44,6 +44,7 @@ const ALL_CATEGORIES = Object.values(FILTER_MENU).flatMap(items => items.map(i =
 
 export default function Home() {
   const [activeFilters, setActiveFilters] = useState<Category[]>(ALL_CATEGORIES);
+  const [isMinimized, setIsMinimized] = useState(false); // 접힘 상태 추가
   const nodeRef = useRef(null);
 
   const toggleFilter = (cat: Category) => {
@@ -79,53 +80,71 @@ export default function Home() {
         <div ref={nodeRef} style={{
           position: 'absolute', top: '20px', left: '70px', zIndex: 1000,
           background: 'rgba(255, 255, 255, 0.95)', padding: '15px', borderRadius: '12px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.2)', color: '#000', width: '220px',
-          maxHeight: '85vh', overflowY: 'auto', cursor: 'move'
+          boxShadow: '0 4px 20px rgba(0,0,0,0.2)', color: '#000', 
+          width: isMinimized ? 'auto' : '220px', // 접혔을 때 너비 조절
+          maxHeight: '85vh', overflowY: 'auto', cursor: 'move',
+          transition: 'width 0.3s ease' // 부드러운 애니메이션
         }}>
-          <h3 style={{ margin: '0 0 10px 0', textAlign: 'center', fontSize: '18px' }}>🔍 지도 필터</h3>
-          
-          {/* 상단 전체 조절 버튼 */}
-          <div style={{ display: 'flex', gap: '5px', marginBottom: '15px' }}>
+          {/* 헤더 영역: 제목과 접기 버튼 */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isMinimized ? '0' : '15px' }}>
+            {!isMinimized && <h3 style={{ margin: 0, fontSize: '18px' }}>🔍 지도 필터</h3>}
             <button 
-              onClick={() => setAllFilters(true)}
-              style={{ flex: 1, fontSize: '11px', padding: '5px', cursor: 'pointer', background: '#e3f2fd', border: '1px solid #90caf9', borderRadius: '4px' }}
-            >전체 선택</button>
-            <button 
-              onClick={() => setAllFilters(false)}
-              style={{ flex: 1, fontSize: '11px', padding: '5px', cursor: 'pointer', background: '#ffebee', border: '1px solid #ef9a9a', borderRadius: '4px' }}
-            >전체 해제</button>
+              onClick={() => setIsMinimized(!isMinimized)}
+              style={{
+                padding: '5px 10px', cursor: 'pointer', background: '#eee', 
+                border: 'none', borderRadius: '6px', fontSize: '12px',
+                marginLeft: isMinimized ? '0' : '10px'
+              }}
+            >
+              {isMinimized ? '🔍 필터 열기' : '접기'}
+            </button>
           </div>
-
-          {(Object.keys(FILTER_MENU) as MainGroup[]).map(group => (
-            <div key={group} style={{ marginBottom: '15px' }}>
-              <div style={{ 
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-                background: '#f5f5f5', padding: '4px 8px', borderRadius: '4px', marginBottom: '8px'
-              }}>
-                <h4 style={{ fontSize: '14px', margin: 0, color: '#333' }}>{group}</h4>
+          
+          {/* 접히지 않았을 때만 상세 내용 표시 */}
+          {!isMinimized && (
+            <>
+              {/* 상단 전체 조절 버튼 */}
+              <div style={{ display: 'flex', gap: '5px', marginBottom: '15px' }}>
                 <button 
-                  onClick={() => toggleGroup(group)}
-                  style={{ fontSize: '10px', padding: '2px 6px', cursor: 'pointer', background: '#fff', border: '1px solid #ccc', borderRadius: '3px' }}
-                >
-                  On/Off
-                </button>
+                  onClick={() => setAllFilters(true)}
+                  style={{ flex: 1, fontSize: '11px', padding: '5px', cursor: 'pointer', background: '#e3f2fd', border: '1px solid #90caf9', borderRadius: '4px' }}
+                >전체 선택</button>
+                <button 
+                  onClick={() => setAllFilters(false)}
+                  style={{ flex: 1, fontSize: '11px', padding: '5px', cursor: 'pointer', background: '#ffebee', border: '1px solid #ef9a9a', borderRadius: '4px' }}
+                >전체 해제</button>
               </div>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '8px' }}>
-                {FILTER_MENU[group].map(item => (
-                  <label key={item.id} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '14px' }}>
-                    <input 
-                      type="checkbox" 
-                      style={{ marginRight: '8px' }}
-                      checked={activeFilters.includes(item.id)}
-                      onChange={() => toggleFilter(item.id)}
-                    />
-                    {item.label}
-                  </label>
-                ))}
-              </div>
-            </div>
-          ))}
+
+              {(Object.keys(FILTER_MENU) as MainGroup[]).map(group => (
+                <div key={group} style={{ marginBottom: '15px' }}>
+                  <div style={{ 
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+                    background: '#f5f5f5', padding: '4px 8px', borderRadius: '4px', marginBottom: '8px'
+                  }}>
+                    <h4 style={{ fontSize: '14px', margin: 0, color: '#333' }}>{group}</h4>
+                    <button 
+                      onClick={() => toggleGroup(group)}
+                      style={{ fontSize: '10px', padding: '2px 6px', cursor: 'pointer', background: '#fff', border: '1px solid #ccc', borderRadius: '3px' }}
+                    >On/Off</button>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '8px' }}>
+                    {FILTER_MENU[group].map(item => (
+                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '14px' }}>
+                        <input 
+                          type="checkbox" 
+                          style={{ marginRight: '8px' }}
+                          checked={activeFilters.includes(item.id)}
+                          onChange={() => toggleFilter(item.id)}
+                        />
+                        {item.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </Draggable>
 
