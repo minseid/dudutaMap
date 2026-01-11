@@ -82,12 +82,13 @@ export default function Home() {
         bounds="parent"
         handle=".drag-handle" // 헤더 부분을 잡아야만 움직이게 설정 (터치 간섭 방지)
         enableUserSelectHack={false} // 모바일에서 텍스트 선택 방지 해제
+        cancel="button"
       >
         <div ref={nodeRef} style={{
           position: 'absolute', top: '20px', left: '10px', zIndex: 9999, // zIndex를 최상단으로
           background: 'rgba(255, 255, 255, 0.98)', padding: '12px', borderRadius: '12px',
           boxShadow: '0 10px 30px rgba(0,0,0,0.3)', color: '#000', 
-          width: isMinimized ? '140px' : '220px',
+          width: isMinimized ? '80px' : '220px',
           maxHeight: '80vh', overflowY: 'auto',
           transition: 'width 0.3s ease',
           touchAction: 'none' // 브라우저 기본 터치 동작 방지 (드래그용)
@@ -100,13 +101,15 @@ export default function Home() {
           }}>
             {!isMinimized && <h3 style={{ margin: 0, fontSize: '16px' }}>🔍 필터</h3>}
             <button 
-              onClick={(e) => {
-                e.stopPropagation(); // 드래그 이벤트 전파 방지
+              onPointerDown={(e) => {
+                e.stopPropagation();
                 setIsMinimized(!isMinimized);
               }}
               style={{
-                padding: '8px 12px', cursor: 'pointer', background: '#333', color: '#fff',
-                border: 'none', borderRadius: '6px', fontSize: '14px',zIndex: 10001,
+                padding: '6px 10px', cursor: 'pointer', background: '#333', color: '#fff',
+                border: 'none', borderRadius: '6px', fontSize: '12px',
+                // 터치 영역을 버튼보다 더 넓게 인식하도록 설정
+                touchAction: 'manipulation'
               }}
             >
               {isMinimized ? '펼치기' : '접기'}
