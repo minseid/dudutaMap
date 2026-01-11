@@ -82,7 +82,7 @@ export default function Home() {
         bounds="parent"
         handle=".drag-handle" // 헤더 부분을 잡아야만 움직이게 설정 (터치 간섭 방지)
         enableUserSelectHack={false} // 모바일에서 텍스트 선택 방지 해제
-        cancel=".filter-list-container" // 리스트 영역에서는 드래그 기능 무효화
+        cancel= "button, .filter-list-container" // 리스트 영역에서는 드래그 기능 무효화
       >
         <div ref={nodeRef} style={{
           position: 'absolute', top: '20px', left: '10px', zIndex: 9999, // zIndex를 최상단으로
@@ -101,7 +101,8 @@ export default function Home() {
           }}>
             {!isMinimized && <h3 style={{ margin: 0, fontSize: '16px' }}>🔍 필터</h3>}
             <button 
-              onPointerDown={(e) => {
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => {
                 e.stopPropagation();
                 setIsMinimized(!isMinimized);
               }}
