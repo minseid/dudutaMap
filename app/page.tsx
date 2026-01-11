@@ -88,15 +88,15 @@ export default function Home() {
           position: 'absolute', top: '20px', left: '10px', zIndex: 9999, // zIndex를 최상단으로
           background: 'rgba(255, 255, 255, 0.98)', padding: '12px', borderRadius: '12px',
           boxShadow: '0 10px 30px rgba(0,0,0,0.3)', color: '#000', 
-          width: isMinimized ? '80px' : '220px',
+          width: isMinimized ? '150px' : '220px',
           maxHeight: '80vh', overflowY: 'auto',
           transition: 'width 0.3s ease',
           touchAction: 'none' // 브라우저 기본 터치 동작 방지 (드래그용)
         }}>
           {/* 드래그 핸들 (모바일에서는 여기를 잡고 끌어야 함) */}
           <div className="drag-handle" style={{ 
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-            marginBottom: isMinimized ? '0' : '15px', cursor: 'move',
+            display: 'flex', justifyContent: 'flex-start', alignItems: 'center', 
+            marginBottom: isMinimized ? '0' : '15px', cursor: 'move',flexShrink: 0,
             background: '#f0f0f0', padding: '8px', borderRadius: '8px',touchAction: 'none' 
           }}>
             {!isMinimized && <h3 style={{ margin: 0, fontSize: '16px' }}>🔍 필터</h3>}
