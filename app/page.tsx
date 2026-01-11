@@ -82,7 +82,7 @@ export default function Home() {
         bounds="parent"
         handle=".drag-handle" // 헤더 부분을 잡아야만 움직이게 설정 (터치 간섭 방지)
         enableUserSelectHack={false} // 모바일에서 텍스트 선택 방지 해제
-        cancel="button"
+        cancel=".filter-list-container" // 리스트 영역에서는 드래그 기능 무효화
       >
         <div ref={nodeRef} style={{
           position: 'absolute', top: '20px', left: '10px', zIndex: 9999, // zIndex를 최상단으로
@@ -97,7 +97,7 @@ export default function Home() {
           <div className="drag-handle" style={{ 
             display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
             marginBottom: isMinimized ? '0' : '15px', cursor: 'move',
-            background: '#f0f0f0', padding: '8px', borderRadius: '8px'
+            background: '#f0f0f0', padding: '8px', borderRadius: '8px',touchAction: 'none' 
           }}>
             {!isMinimized && <h3 style={{ margin: 0, fontSize: '16px' }}>🔍 필터</h3>}
             <button 
@@ -116,28 +116,33 @@ export default function Home() {
             </button>
           </div>
           
+          {/* 2. 필터 리스트 영역 (여기는 스크롤이 되어야 함) */}
           {!isMinimized && (
-            <div style={{ touchAction: 'auto' }}> {/* 내부 체크박스는 터치 가능하게 */}
-              <div style={{ display: 'flex', gap: '5px', marginBottom: '15px' }}>
-                <button onClick={() => setAllFilters(true)} style={btnStyle}>전체 선택</button>
-                <button onClick={() => setAllFilters(false)} style={btnStyle}>전체 해제</button>
+            <div 
+              className="filter-list-container" // Draggable의 cancel 대상
+              onPointerDown={(e) => e.stopPropagation()} // 터치 이벤트가 드래그로 번지는 것 차단
+              style={{ 
+                padding: '15px', 
+                maxHeight: '60vh', // 화면의 60%까지만 차지
+                overflowY: 'auto', // 세로 스크롤 활성화
+                WebkitOverflowScrolling: 'touch', // iOS 부드러운 스크롤
+                touchAction: 'pan-y' // 세로 스크롤만 허용
+              }}
+            >
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '15px' }}>
+                <button onPointerDown={(e) => { e.stopPropagation(); setAllFilters(true); }} style={btnStyle}>전체 선택</button>
+                <button onPointerDown={(e) => { e.stopPropagation(); setAllFilters(false); }} style={btnStyle}>전체 해제</button>
               </div>
 
               {(Object.keys(FILTER_MENU) as MainGroup[]).map(group => (
-                <div key={group} style={{ marginBottom: '15px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <h4 style={{ fontSize: '14px', margin: 0 }}>{group}</h4>
-                    <button onClick={() => toggleGroup(group)} style={miniBtnStyle}>On/Off</button>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div key={group} style={{ marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '14px', margin: '0 0 10px 0', borderBottom: '1px solid #eee', paddingBottom: '5px' }}>{group}</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     {FILTER_MENU[group].map(item => (
-                      <label key={item.id} style={{ 
-                        display: 'flex', alignItems: 'center', cursor: 'pointer', 
-                        fontSize: '15px', padding: '5px 0' // 모바일 클릭 영역 확보
-                      }}>
+                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', fontSize: '16px' }}>
                         <input 
                           type="checkbox" 
-                          style={{ width: '20px', height: '20px', marginRight: '10px' }} // 체크박스 키우기
+                          style={{ width: '24px', height: '24px', marginRight: '12px' }}
                           checked={activeFilters.includes(item.id)}
                           onChange={() => toggleFilter(item.id)}
                         />
