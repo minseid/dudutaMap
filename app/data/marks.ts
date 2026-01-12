@@ -260,10 +260,10 @@ export const DUDU_DATA: MarkerData[] = [
   //스페셜
   //{ id: 228, group: '스페셜', category: 'specialtree', position: [330, 610]}, //12
   //{ id: 228, group: '스페셜', category: 'specialtree', position: [400, 630]}, //11
-  { id: 228, group: '스페셜', category: 'specialtree', position: [480, 640]}, //10
+  // { id: 228, group: '스페셜', category: 'specialtree', position: [480, 640]}, //10
   //{ id: 228, group: '스페셜', category: 'specialtree', position: [550, 640]}, //9
   //{ id: 228, group: '스페셜', category: 'specialtree', position: [600, 580]}, //8
-  // { id: 228, group: '스페셜', category: 'specialtree', position: [600, 510]}, //7
+  { id: 228, group: '스페셜', category: 'specialtree', position: [600, 510]}, //7
   // { id: 228, group: '스페셜', category: 'specialtree', position: [630, 430]}, //6
   // { id: 228, group: '스페셜', category: 'specialtree', position: [635, 370]}, //5
   // { id: 228, group: '스페셜', category: 'specialtree', position: [540, 305]}, //4
