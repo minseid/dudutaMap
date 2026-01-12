@@ -139,7 +139,7 @@ export const DUDU_DATA: MarkerData[] = [
   { id: 118, group: '버섯', category: 'truffle', position: [590, 890]}, //ㅇㅇ
   { id: 119, group: '버섯', category: 'truffle', position: [612, 900]}, //ㅇㅇ
   { id: 120, group: '버섯', category: 'truffle', position: [623, 905]}, //ㅇㅇ
-  { id: 121, group: '버섯', category: 'truffle', position: [637, 922]}, //ㅇㅇ
+  { id: 121, group: '버섯', category: 'truffle', position: [638, 925]}, //ㅇㅇ
   { id: 122, group: '버섯', category: 'truffle', position: [607, 925]}, //ㅇㅇ
   { id: 123, group: '버섯', category: 'truffle', position: [590, 930]}, //ㅇㅇ
   { id: 124, group: '버섯', category: 'truffle', position: [620, 940]}, //ㅇㅇ

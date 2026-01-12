@@ -3,6 +3,7 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Category, MainGroup } from './types/map';
 import { DUDU_DATA } from './data/marks';
+import { Analytics } from "@vercel/analytics/next"
 
 const GameMap = dynamic(() => import('./components/GameMap'), { ssr: false });
 
@@ -117,6 +118,7 @@ export default function Home() {
                           <input type="checkbox" style={{ width: '18px', height: '18px', marginRight: '10px' }} checked={activeFilters.includes(item.id)} onChange={() => toggleFilter(item.id)} />
                           <img src={`/icons/${item.id}.png`} alt="" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
                           <span>{item.label}</span>
+                          <Analytics />
                         </label>
                       ))}
                     </div>
