@@ -1,12 +1,12 @@
 // types/map.ts
-export type MainGroup = '과일' | '버섯' | '밥그릇' | '스페셜' ;
+export type MainGroup = '과일' | '버섯' | '밥그릇' | '스페셜'| '희귀' ;
 
 export type Category = 
   | 'apple' | 'orange' | 'raspberry'| 'blueberry' 
   | 'truffle' | 'tricoloma' | 'net' | 'shiitake' | 'oyster'  
   | 'seaotter' | 'dambi' | 'fox' | 'rebbit' | 'panda' | 'formosandeer' | 'copybara' | 'alpaca' 
-  | 'specialtree'
-  | 'specialrock'
+  | 'specialtree'| 'specialrock'
+  | 'bigtree'
 
 export interface MarkerData {
   id: number;

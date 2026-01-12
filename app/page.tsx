@@ -37,6 +37,9 @@ const FILTER_MENU: Record<MainGroup, { id: Category; label: string }[]> = {
   '스페셜':[
     {id : 'specialtree' , label : '참나무'},
     {id : 'specialrock', label : '형광석'}
+  ],
+  '희귀' : [
+    {id : 'bigtree' , label : '희귀목재'}
   ]
 };
 

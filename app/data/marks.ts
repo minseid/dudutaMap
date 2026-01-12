@@ -271,5 +271,16 @@ export const DUDU_DATA: MarkerData[] = [
   { id: 229, group: '스페셜', category: 'specialrock', position: [390, 320]}, //2
   // { id: 228, group: '스페셜', category: 'specialtree', position: [320, 350]}, //1
 
+  //희귀
+  { id: 230, group: '희귀', category: 'bigtree', position: [540, 335]}, 
+  { id: 231, group: '희귀', category: 'bigtree', position: [605, 310]}, 
+  { id: 231, group: '희귀', category: 'bigtree', position: [570, 580]}, 
+  { id: 231, group: '희귀', category: 'bigtree', position: [580, 610]}, 
+  { id: 231, group: '희귀', category: 'bigtree', position: [330, 580]}, 
+  { id: 231, group: '희귀', category: 'bigtree', position: [265, 620]}, 
+  { id: 231, group: '희귀', category: 'bigtree', position: [315, 365]}, 
+  { id: 231, group: '희귀', category: 'bigtree', position: [340, 400]}, 
+
+
 
 ];
