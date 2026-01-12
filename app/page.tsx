@@ -80,26 +80,26 @@ export default function Home() {
       <Draggable 
         nodeRef={nodeRef} 
         bounds="parent"
-        handle=".drag-handle" // 헤더 부분을 잡아야만 움직이게 설정 (터치 간섭 방지)
-        enableUserSelectHack={false} // 모바일에서 텍스트 선택 방지 해제
-        cancel= "button, .filter-list-container" // 리스트 영역에서는 드래그 기능 무효화
+        handle=".drag-handle" 
+        enableUserSelectHack={false} 
+        cancel="button, .filter-list-container" 
       >
         <div ref={nodeRef} style={{
-          position: 'absolute', top: '20px', left: '10px', zIndex: 9999, // zIndex를 최상단으로
+          position: 'absolute', top: '20px', left: '10px', zIndex: 9999,
           background: 'rgba(255, 255, 255, 0.98)', padding: '12px', borderRadius: '12px',
           boxShadow: '0 10px 30px rgba(0,0,0,0.3)', color: '#000', 
           width: isMinimized ? '150px' : '220px',
           maxHeight: '80vh', overflowY: 'auto',
           transition: 'width 0.3s ease',
-          touchAction: 'none' // 브라우저 기본 터치 동작 방지 (드래그용)
+          touchAction: 'none' 
         }}>
-          {/* 드래그 핸들 (모바일에서는 여기를 잡고 끌어야 함) */}
+          {/* 드래그 핸들 */}
           <div className="drag-handle" style={{ 
             display: 'flex', justifyContent: 'flex-start', alignItems: 'center', 
-            marginBottom: isMinimized ? '0' : '15px', cursor: 'move',flexShrink: 0,
-            background: '#f0f0f0', padding: '8px', borderRadius: '8px',touchAction: 'none' 
+            marginBottom: isMinimized ? '0' : '15px', cursor: 'move', flexShrink: 0,
+            background: '#f0f0f0', padding: '8px', borderRadius: '8px', touchAction: 'none' 
           }}>
-            {!isMinimized && <h3 style={{ margin: 0, fontSize: '16px' }}>🔍 필터</h3>}
+            {!isMinimized && <h3 style={{ margin: 0, fontSize: '16px', marginRight: '10px' }}>🔍 필터</h3>}
             <button 
               onPointerDown={(e) => e.stopPropagation()}
               onPointerUp={(e) => {
@@ -109,25 +109,26 @@ export default function Home() {
               style={{
                 padding: '6px 10px', cursor: 'pointer', background: '#333', color: '#fff',
                 border: 'none', borderRadius: '6px', fontSize: '12px',
-                // 터치 영역을 버튼보다 더 넓게 인식하도록 설정
                 touchAction: 'manipulation'
               }}
             >
               {isMinimized ? '펼치기' : '접기'}
             </button>
+            {/* 접혔을 때 드래그 유도 텍스트 (선택사항) */}
+            {isMinimized && <span style={{fontSize: '11px', marginLeft: '8px', color: '#666'}}>↕ 이동</span>}
           </div>
           
-          {/* 2. 필터 리스트 영역 (여기는 스크롤이 되어야 함) */}
+          {/* 2. 필터 리스트 영역 */}
           {!isMinimized && (
             <div 
-              className="filter-list-container" // Draggable의 cancel 대상
-              onPointerDown={(e) => e.stopPropagation()} // 터치 이벤트가 드래그로 번지는 것 차단
+              className="filter-list-container" 
+              onPointerDown={(e) => e.stopPropagation()} 
               style={{ 
                 padding: '15px', 
-                maxHeight: '60vh', // 화면의 60%까지만 차지
-                overflowY: 'auto', // 세로 스크롤 활성화
-                WebkitOverflowScrolling: 'touch', // iOS 부드러운 스크롤
-                touchAction: 'pan-y' // 세로 스크롤만 허용
+                maxHeight: '60vh', 
+                overflowY: 'auto', 
+                WebkitOverflowScrolling: 'touch', 
+                touchAction: 'pan-y' 
               }}
             >
               <div style={{ display: 'flex', gap: '8px', marginBottom: '15px' }}>
@@ -140,14 +141,29 @@ export default function Home() {
                   <h4 style={{ fontSize: '14px', margin: '0 0 10px 0', borderBottom: '1px solid #eee', paddingBottom: '5px' }}>{group}</h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     {FILTER_MENU[group].map(item => (
-                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', fontSize: '16px' }}>
+                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', fontSize: '16px', cursor: 'pointer' }}>
                         <input 
                           type="checkbox" 
-                          style={{ width: '24px', height: '24px', marginRight: '12px' }}
+                          style={{ width: '24px', height: '24px', marginRight: '12px' }} 
                           checked={activeFilters.includes(item.id)}
                           onChange={() => toggleFilter(item.id)}
                         />
-                        {item.label}
+                        
+                        {/* --- 추가된 아이콘 부분 --- */}
+                        <img 
+                          src={`/icons/${item.id}.png`} 
+                          alt=""
+                          onError={(e) => (e.currentTarget.style.display = 'none')} 
+                          style={{ 
+                            width: '20px', 
+                            height: '20px', 
+                            marginRight: '8px',
+                            objectFit: 'contain'
+                          }} 
+                        />
+                        {/* ----------------------- */}
+                        
+                        <span>{item.label}</span>
                       </label>
                     ))}
                   </div>
