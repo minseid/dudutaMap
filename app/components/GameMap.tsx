@@ -5,17 +5,15 @@ import 'leaflet/dist/leaflet.css';
 import { MarkerData, Category } from '../types/map';
 import { useEffect, useState } from 'react';
 
-// --- 추가: 아이콘 생성 함수 ---
+// --- 아이콘 생성 함수 ---
 const getCustomIcon = (category: string, iconUrl?: string) => {
-  // 특정 iconUrl이 있으면 그것을 사용, 없으면 카테고리 이름으로 public 폴더에서 찾음
   const finalUrl = iconUrl || `/icons/${category}.png`;
   
   return L.icon({
     iconUrl: finalUrl,
-    iconSize: [32, 32], // 아이콘 크기
-    iconAnchor: [16, 16], // 아이콘의 중심점
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
     popupAnchor: [0, -16],
-    // 이미지 로드 실패 시 기본 마커로 대체하기 위한 설정 (선택사항)
     className: 'custom-marker-icon'
   });
 };
@@ -53,7 +51,6 @@ function ManualImageOverlay({ url, bounds }: { url: string, bounds: L.LatLngBoun
 }
 
 // 2. 내부 요소 관리
-// randomMarker 프롭스를 추가했습니다.
 function MapContents({ markers, activeFilters, bounds, randomMarker }: { 
   markers: MarkerData[], 
   activeFilters: Category[], 
@@ -87,27 +84,22 @@ function MapContents({ markers, activeFilters, bounds, randomMarker }: {
     <>
       <ManualImageOverlay url="/duduMap.png" bounds={bounds} />
       
-      {/* 일반 마커들: 커스텀 아이콘 적용 */}
       {markers
         .filter(m => activeFilters.includes(m.category))
         .map((marker) => (
           <Marker 
             key={`${marker.id}-${marker.position[0]}`} 
             position={marker.position}
-            icon={getCustomIcon(marker.category, marker.iconUrl)} // 커스텀 아이콘 적용
+            icon={getCustomIcon(marker.category, marker.iconUrl)}
           >
-            <Tooltip direction="top" offset={[0, -10]} opacity={1}>
-
-            </Tooltip>
           </Marker>
         ))}
 
-      {/* 랜덤 마커: 강조된 전용 아이콘 적용 */}
       {randomMarker && (
         <Marker 
           position={randomMarker.position}
           icon={L.icon({
-            iconUrl: '/icons/random-target.png', // 랜덤 지점용 전용 아이콘
+            iconUrl: '/icons/random-target.png',
             iconSize: [45, 45],
             iconAnchor: [22, 22]
           })}
@@ -128,11 +120,11 @@ export default function GameMap({ markers, activeFilters, randomMarker }: {
   randomMarker?: any 
 }) {
   const [isMounted, setIsMounted] = useState(false);
+  // 전체 맵의 좌표 범위
   const bounds: L.LatLngBoundsExpression = [[0, 0], [1000, 1000]];
 
   useEffect(() => {
     setIsMounted(true);
-    // 기본 아이콘 (커스텀 아이콘 로드 실패 시 대비)
     const DefaultIcon = L.icon({
       iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
       shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
@@ -149,6 +141,13 @@ export default function GameMap({ markers, activeFilters, randomMarker }: {
       <MapContainer 
         crs={L.CRS.Simple} 
         bounds={bounds} 
+        // --- 축소 기능을 위한 추가 설정 ---
+        minZoom={-3}         // 더 작게 축소 가능 (-1, -2보다 더 멀리 보임)
+        maxZoom={2}          // 확대 한도
+        zoom={-1}            // 초기 줌 설정 (음수일수록 멀리 보임)
+        maxBounds={bounds}   // 지도 밖으로 나가는 것 방지
+        maxBoundsViscosity={1.0} 
+        // ------------------------------
         style={{ height: '100vh', width: '100%', background: '#aad3df' }}
         attributionControl={false}
       >
@@ -156,7 +155,7 @@ export default function GameMap({ markers, activeFilters, randomMarker }: {
           markers={markers} 
           activeFilters={activeFilters} 
           bounds={bounds} 
-          randomMarker={randomMarker} // 랜덤 마커 전달
+          randomMarker={randomMarker} 
         />
       </MapContainer>
     </div>
