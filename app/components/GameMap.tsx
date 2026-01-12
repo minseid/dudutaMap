@@ -1,5 +1,5 @@
 'use client'
-import { MapContainer, Marker, Tooltip, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Tooltip, useMapEvents, useMap, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MarkerData, Category } from '../types/map';
@@ -120,18 +120,10 @@ export default function GameMap({ markers, activeFilters, randomMarker }: {
   randomMarker?: any 
 }) {
   const [isMounted, setIsMounted] = useState(false);
-  // 전체 맵의 좌표 범위
   const bounds: L.LatLngBoundsExpression = [[0, 0], [1000, 1000]];
 
   useEffect(() => {
     setIsMounted(true);
-    const DefaultIcon = L.icon({
-      iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-    });
-    L.Marker.prototype.options.icon = DefaultIcon;
   }, []);
 
   if (!isMounted) return <div style={{ height: '100vh', width: '100%', background: '#aad3df' }} />;
@@ -140,17 +132,21 @@ export default function GameMap({ markers, activeFilters, randomMarker }: {
     <div style={{ height: '100vh', width: '100%' }}>
       <MapContainer 
         crs={L.CRS.Simple} 
-        bounds={bounds} 
-        // --- 축소 기능을 위한 추가 설정 ---
-        minZoom={-3}         // 더 작게 축소 가능 (-1, -2보다 더 멀리 보임)
-        maxZoom={2}          // 확대 한도
-        zoom={-1}            // 초기 줌 설정 (음수일수록 멀리 보임)
-        maxBounds={bounds}   // 지도 밖으로 나가는 것 방지
-        maxBoundsViscosity={1.0} 
-        // ------------------------------
+        center={[500, 500]}
+        zoom={-1}
+        minZoom={-3}         
+        maxZoom={3}
+        maxBounds={[[-2000, -2000], [3000, 3000]]} 
+        maxBoundsViscosity={0} 
         style={{ height: '100vh', width: '100%', background: '#aad3df' }}
+        
+        // --- 여기를 수정합니다 ---
+        zoomControl={false} // 1. 기본 왼쪽 버튼을 끕니다.
         attributionControl={false}
       >
+        {/* 2. 오른쪽에 버튼을 새로 추가합니다. (topright, bottomright 중 선택 가능) */}
+        <ZoomControl position="topright" /> 
+
         <MapContents 
           markers={markers} 
           activeFilters={activeFilters} 
