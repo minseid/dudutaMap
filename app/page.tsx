@@ -58,7 +58,41 @@ export default function Home() {
   };
 
   return (
-    <main style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden', color: '#000' }}>
+    <main style={{ display: 'flex', flexDirection: 'column', width: '100vw', height: '100vh', overflow: 'hidden', color: '#000' }}>
+      {/* 맵 리뉴얼 공지 배너 */}
+      <a 
+        href="https://duduta.kro.kr/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: '#fff',
+          padding: '24px',
+          textAlign: 'center',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 2000,
+          fontSize: '28px',
+          fontWeight: 'bold',
+          letterSpacing: '1px',
+          textDecoration: 'none',
+          display: 'block',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.02)';
+          e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        }}
+      >
+        🎉 맵이 새롭게 리뉴얼되었습니다!
+        클릭하여 이동해주세요! 🎉
+      </a>
+      
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
       <aside style={{
         width: isOpen ? '280px' : '0px',
         height: '100%',
@@ -132,6 +166,7 @@ export default function Home() {
       <section style={{ flex: 1, position: 'relative' }}>
         <GameMap markers={DUDU_DATA} activeFilters={activeFilters} />
       </section>
+      </div>
     </main>
   );
 }
